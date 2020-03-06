@@ -11,8 +11,9 @@ def main() :
     # Convert to Upper case and pass to encrypt function
     ciphertext = encrypt_text(plaintext.upper(), key.upper())
     print("Ciphertext : ", ciphertext)
-
-    print("Decrypt text: ", decrypt_text(ciphertext.upper(), key.upper()))
+    # Decryption
+    new_plaintext = decrypt_text(ciphertext.upper(), key.upper())
+    print("Decrypt text: ", new_plaintext)
 
 
 # Remove white space from text
@@ -34,7 +35,7 @@ def encrypt_text(plaintext, key) :
     plaintext = trim_space(plaintext)
     # Remove Special Chars and Convert into upper case
     plaintext = trim_special_chars(plaintext)
-    key_dictionary=substitute_text(plaintext, key)
+    key_dictionary=substitute_text(plaintext, key,'E')
     print("Plaintext :",plaintext)
     ciphertext = ""
     for char in plaintext:
@@ -46,18 +47,25 @@ def decrypt_text(ciphertext, key) :
     ciphertext = trim_space(ciphertext)
     # Remove Special Chars and Convert into upper case
     ciphertext = trim_special_chars(ciphertext)
-    key_dictionary = substitute_text(ciphertext, key)
+    key_dictionary = substitute_text(ciphertext, key,'D')
     plaintext = ""
     for char in ciphertext :
-        plaintext = plaintext + key_dictionary[char]
+        plaintext = plaintext + key_dictionary.get(char)
     return plaintext
 
 
-def substitute_text(string, key) :
+def substitute_text(string, key, mode) :
     key_dictionary = {}
-    for char,key_char in zip(range(ord('A'), ord('Z') + 1), key) :
-        key_dictionary[chr(char)]=key_char
-    return  key_dictionary
+    if mode == 'E':
+        for char,key_char in zip(range(ord('A'), ord('Z') + 1), key) :
+            key_dictionary[chr(char)]=key_char
+        return  key_dictionary
+    elif mode == 'D':
+        for char,key_char in zip(range(ord('A'), ord('Z') + 1), key) :
+            key_dictionary[key_char]=chr(char)
+        return  key_dictionary
+    else:
+        return "Please Enter a valid Mode"
 
 if __name__ == "__main__" :
     main()
